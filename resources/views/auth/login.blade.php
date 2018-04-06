@@ -51,7 +51,7 @@
                                     {{ trans('login.login_button') }}
                                 </button>
 
-                                <a href="/password/email">{{ trans('login.forgot_password') }}</a>
+                                <a href="{{ route('password.email') }}">{{ trans('login.forgot_password') }}</a>
                             </div>
                         </div>
                     </form>
