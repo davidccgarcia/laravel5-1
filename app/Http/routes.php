@@ -70,4 +70,14 @@ Route::group(['middleware' => 'auth'], function () {
             return Request::all();
         });
     });
+
+    Route::group(['middleware' => 'role:admin'], function () {
+        Route::get('admin/posts', function () {
+            return view('admin.posts');
+        });
+
+        Route::get('admin/settings', function () {
+            return view('admin.settings');
+        });
+    });
 });
