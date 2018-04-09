@@ -55,3 +55,9 @@ Route::get('confirmation/{token}', [
     'uses' => 'Auth\AuthController@getConfirmation', 
     'as' => 'confirmation'
 ]);
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('account', function () {
+        return view('account');
+    });
+});

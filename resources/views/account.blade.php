@@ -4,12 +4,14 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                @include('partials/success')
                 <div class="panel panel-default">
-                    <div class="panel-heading">Welcome!</div>
+                    <div class="panel-heading">My account</div>
                     <div class="panel-body">
-                        <h1>Laravel 5</h1>
-                        <p>Welcome to our site!</p>
+                        @include('partials/success')
+                        <ul>
+                            <li><a href="#">Edit profile</a></li>
+                            <li><a href="#">Change password</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
