@@ -22,9 +22,9 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                         <div class="form-group">
-                            <label class="col-md-4 control-label">{{ trans('validation.attributes.email') }}</label>
+                            <label class="col-md-4 control-label">{{ trans('validation.attributes.username') }}</label>
                             <div class="col-md-6">
-                                {!! Form::text('email', null, ['class' => 'form-control', 'type' => 'email']) !!}
+                                {!! Form::text('username', null, ['class' => 'form-control']) !!}
                             </div>
                         </div>
 

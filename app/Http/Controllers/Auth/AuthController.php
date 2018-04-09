@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
+    protected $username = 'username';
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -76,5 +78,31 @@ class AuthController extends Controller
     public function redirectPath()
     {
         return route('home');
+    }
+
+    /**
+     * Get the path to the login route.
+     *
+     * @return string
+     */
+    public function loginPath()
+    {
+        return route('login');
+    }
+
+    /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getCredentials(Request $request)
+    {
+        return [
+            'username' => $request->get('username'), 
+            'password' => $request->get('password'), 
+            'active' => true
+        ];
+        return $request->only($this->loginUsername(), 'password');
     }
 }
