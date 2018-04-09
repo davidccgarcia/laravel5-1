@@ -50,3 +50,8 @@ Route::post('password/email', [
 // Password reset routes...
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
+
+Route::get('confirmation/{token}', [
+    'uses' => 'Auth\AuthController@getConfirmation', 
+    'as' => 'confirmation'
+]);

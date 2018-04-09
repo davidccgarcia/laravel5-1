@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
-    protected $username = 'username';
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -61,23 +61,56 @@ class AuthController extends Controller
         $user = new User([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'magic_words' => bcrypt($data['password']),
         ]);
 
         $user->role = 'user';
+        $user->registration_token = str_random(45);
         $user->save();
+
+        $url = url('confirmation', [
+            'token' => $user->registration_token
+        ]);
+
+        Mail::send('emails/registration', compact('user', 'url'), function ($m) use ($user) {
+            $m->to($user->email, $user->name)->subject(trans('email.subject_registration'));
+        });
 
         return $user;
     }
 
-    /**
-     * Get the post register / login redirect path.
-     *
-     * @return string
-     */
-    public function redirectPath()
+    public function getConfirmation($token)
     {
-        return route('home');
+        $user = User::where('registration_token', $token)
+            ->firstOrFail();
+
+        $user->registration_token = null;
+        $user->save();
+
+        return redirect('login')
+            ->with('alert', trans('email.validation_message'));
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postRegister(Request $request)
+    {
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $user = $this->create($request->all());
+
+        return redirect('login')
+            ->with('alert', trans('email.subject_registration') . ": $user->email");
     }
 
     /**
@@ -99,10 +132,14 @@ class AuthController extends Controller
     protected function getCredentials(Request $request)
     {
         return [
-            'username' => $request->get('username'), 
+            'email' => $request->get('email'), 
             'password' => $request->get('password'), 
-            'active' => true
+            'registration_token' => null
         ];
-        return $request->only($this->loginUsername(), 'password');
+    }
+
+    public function redirectPath()
+    {
+        return route('home');
     }
 }
