@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -32,7 +33,9 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', [
+            'except' => 'getLogout', 'except' => 'getConfirmation'
+        ]);
     }
 
     /**
@@ -79,18 +82,6 @@ class AuthController extends Controller
         return $user;
     }
 
-    public function getConfirmation($token)
-    {
-        $user = User::where('registration_token', $token)
-            ->firstOrFail();
-
-        $user->registration_token = null;
-        $user->save();
-
-        return redirect('login')
-            ->with('alert', trans('email.validation_message'));
-    }
-
     /**
      * Handle a registration request for the application.
      *
@@ -107,10 +98,22 @@ class AuthController extends Controller
             );
         }
 
-        $user = $this->create($request->all());
+        Auth::login($this->create($request->all()));
 
-        return redirect('login')
-            ->with('alert', trans('email.subject_registration') . ": $user->email");
+        return redirect($this->redirectPath())
+            ->with('alert', trans('email.confirmation'));
+    }
+
+    public function getConfirmation($token)
+    {
+        $user = User::where('registration_token', $token)
+            ->firstOrFail();
+
+        $user->registration_token = null;
+        $user->save();
+
+        return redirect('/')
+            ->with('alert', trans('email.validation_message'));
     }
 
     /**
@@ -133,8 +136,7 @@ class AuthController extends Controller
     {
         return [
             'email' => $request->get('email'), 
-            'password' => $request->get('password'), 
-            'registration_token' => null
+            'password' => $request->get('password')
         ];
     }
 

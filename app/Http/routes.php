@@ -59,5 +59,15 @@ Route::get('confirmation/{token}', [
 Route::group(['middleware' => 'auth'], function () {
     Route::get('account', function () {
         return view('account');
+    }); 
+
+    Route::group(['middleware' => 'verified'], function () {
+        Route::get('publish', function () {
+            return view('publish');
+        });
+
+        Route::post('publish', function () {
+            return Request::all();
+        });
     });
 });
