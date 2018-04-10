@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
+    protected $maxLoginAttempts = 2;
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -33,9 +34,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', [
-            'except' => 'getLogout', 'except' => 'getConfirmation'
-        ]);
+        $this->middleware('guest', ['except' => 'getLogout']);
     }
 
     /**
