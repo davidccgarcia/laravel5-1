@@ -9,7 +9,7 @@
                     <div class="panel-body">
                         @include('partials/success')
                         <ul>
-                            <li><a href="#">Edit profile</a></li>
+                            <li><a href="{{ route('account.profile') }}">Edit profile</a></li>
                             <li><a href="{{ route('account.password') }}">Change password</a></li>
                         </ul>
                     </div>

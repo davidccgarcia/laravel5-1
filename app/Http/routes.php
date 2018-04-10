@@ -79,6 +79,16 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'AccountController@changePassword', 
             'as' => 'account.changePassword'
         ]);
+
+        Route::get('account/profile', [
+            'uses' => 'AccountController@profile', 
+            'as' => 'account.profile'
+        ]);
+
+        Route::put('account/edit-profile/', [
+            'uses' => 'AccountController@editProfile', 
+            'as' => 'account.edit-profile'
+        ]);
     });
 
     Route::group(['middleware' => 'role:admin'], function () {
