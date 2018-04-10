@@ -69,6 +69,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('publish', function () {
             return Request::all();
         });
+
+        Route::get('account/password', [
+            'uses' => 'AccountController@password', 
+            'as' => 'account.password'
+        ]);
+
+        Route::post('account', [
+            'uses' => 'AccountController@changePassword', 
+            'as' => 'account.changePassword'
+        ]);
     });
 
     Route::group(['middleware' => 'role:admin'], function () {

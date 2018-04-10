@@ -10,7 +10,7 @@
                         @include('partials/success')
                         <ul>
                             <li><a href="#">Edit profile</a></li>
-                            <li><a href="#">Change password</a></li>
+                            <li><a href="{{ route('account.password') }}">Change password</a></li>
                         </ul>
                     </div>
                 </div>

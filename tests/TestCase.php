@@ -23,7 +23,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         return $app;
     }
 
-    public function createUser($role)
+    public function createUser($role = 'user')
     {
         return factory(App\User::class)->create([
             'name' => 'David García', 
